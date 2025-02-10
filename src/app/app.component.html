@@ -42,28 +42,34 @@
       <h1 class="text-3xl font-bold">Users list</h1>
     </div>
     <div >
-      @if(data$) {
+      @defer (on viewport; prefetch on idle) {
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-        @for (item of data$; track item.id; let even = $even) {
-          <div class="flex gap-2 even:bg-green-200 p-2 max-w-sm mx-auto bg-white shadow-lg rounded-2xl overflow-hidden mb-3">
-            <div>
-              <img
-                class="w-[80px] h-[80px] rounded-full object-cover bg-gray-400"
-                src=""
-                alt=""
-              />
+          @for (item of data$; track item.id; let even = $even) {
+            <div class="flex gap-2 even:bg-green-200 p-2 max-w-sm mx-auto bg-white shadow-lg rounded-2xl overflow-hidden mb-3">
+              <div>
+                <img
+                  class="w-[80px] h-[80px] rounded-full object-cover bg-gray-400"
+                  src=""
+                  alt=""
+                />
+              </div>
+              <div>
+                <p class="">{{ item.name }}</p>
+                <a [href]="'mailto: '+ item.email" class="font-thin underline">{{ item.email }}</a>
+                <p>{{ item.address.street }}</p>
+              </div>
             </div>
-            <div>
-              <p class="">{{ item.name }}</p>
-              <a [href]="'mailto: '+ item.email" class="font-thin underline">{{ item.email }}</a>
-              <p>{{ item.address.street }}</p>
-            </div>
-          </div>
-        }
-      </div>
-      } @else {
-        <div>no data to show</div>
+          }
+        </div>
+      } @loading {
+        <div>loading...</div>
+      } @error {
+        <a [href]="fetchOnError()">try again</a>
+      } @placeholder {
+        <p>Initial</p>
       }
+        
+      
     </div>
   </div>
 </main>
